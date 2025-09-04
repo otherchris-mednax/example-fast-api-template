@@ -1,0 +1,15 @@
+image: mednax.azurecr.io/mednax/fast-api-template
+version: 0.0.0
+
+dev:
+  ms_config_url: https://login.microsoftonline.com/ae2bff4d-4382-4532-b4a0-f1e5a9c874a8/v2.0/.well-known/openid-configuration
+  resource_id: YOUR_CLIENT_ID
+test:
+  ms_config_url: https://login.microsoftonline.com/ae2bff4d-4382-4532-b4a0-f1e5a9c874a8/v2.0/.well-known/openid-configuration
+  resource_id: YOUR_CLIENT_ID
+stage:
+  ms_config_url: https://login.microsoftonline.com/ae2bff4d-4382-4532-b4a0-f1e5a9c874a8/v2.0/.well-known/openid-configuration
+  resource_id: YOUR_CLIENT_ID
+prod:
+  ms_config_url: https://login.microsoftonline.com/ae2bff4d-4382-4532-b4a0-f1e5a9c874a8/v2.0/.well-known/openid-configuration
+  resource_id: YOUR_CLIENT_ID

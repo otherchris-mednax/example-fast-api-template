@@ -1,0 +1,33 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: fast-api-template
+spec:
+  generators:
+    - list:
+        elements:
+          - env: dev
+            version: 0.0.1
+            url: mdnxdev.com
+            server: preprod
+  template:
+    metadata:
+      name: 'fast-api-template-{{env}}'
+    spec:
+      source:
+        repoURL: git@github.com:mednax-it/sdbi-aks-apps.git
+        targetRevision: HEAD
+        path: fast-api-template
+        helm:
+          values: |
+            version: '{{version}}'
+            environment: '{{env}}'
+            url: '{{url}}'
+      destination:
+        name: '{{server}}'
+        namespace: '{{env}}'
+      project: default
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true

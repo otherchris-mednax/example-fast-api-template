@@ -1,0 +1,25 @@
+FROM mednax.azurecr.io/mednax/python-base-image:5
+
+ARG VERSION
+ARG PROJECT_NAME
+ARG JFROG_USER
+
+ENV LANG="en_US.UTF-8"
+ENV VERSION_NUMBER=$VERSION
+ENV PROJECT_NAME=$PROJECT_NAME
+
+COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+
+WORKDIR /app
+COPY pyproject.toml /
+COPY poetry.lock /
+
+RUN --mount=type=secret,id=ARTIFACT_ACCESS_TOKEN \
+  poetry config http-basic.pediatrix $JFROG_USER $(cat /run/secrets/ARTIFACT_ACCESS_TOKEN)
+RUN poetry install --only main --no-root
+
+COPY ./src /app
+
+WORKDIR /
+HEALTHCHECK --interval=1s --timeout=1s --start-period=2s --retries=3 \
+  CMD ["/bin/sh", "-c", "./app/fast_api_template/healthcheck.py"]

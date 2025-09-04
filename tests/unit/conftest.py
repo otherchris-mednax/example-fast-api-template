@@ -1,0 +1,51 @@
+import os
+
+import pytest
+from fastapi.testclient import TestClient
+from jose import jwt
+
+
+def pytest_configure():
+    os.environ["VERSION_NUMBER"] = "1.1.1"
+    os.environ["PROJECT_NAME"] = "fast-api-template"
+    os.environ["RESOURCE_ID"] = "this_apps_client_id"
+    os.environ["MS_CONFIG_URL"] = "http://login.fake.com/openid-configuration"
+    os.environ["ISSUER"] = (
+        "https://sts.windows.net/ae2bff4d-4382-4532-b4a0-f1e5a9c874a8/"
+    )
+    os.environ["ROLES"] = "UCDT.Read"
+    os.environ["JWKS_URL"] = "http://example.com"
+
+
+@pytest.fixture
+def jwk():
+    return {
+        "kty": "RSA",
+        "alg": "RS256",
+        "kid": "testing",
+        "d": "ZZAsFK_vk1OFeHA7EAYZgLHptxC4s6ZvHX26yViNrAfT-f4XO9w4SoeAfQDwbCKmoqM8kbszUokubWFAXwAMuUCbLMrJyq5m1T8aKVuK58U_NuBQ75R0V2RCvVDE4ugR8u-tnT-9ts1EfN46XLyKqopEyQ0xTj_ar_65ar3PKCk",
+        "n": "ywYsd9Ae4mwfO8V2xrvuF_el7etGSWiFphmhJr-ImQatIKXMbsAyxsEwYJYG7TqjwNQiPWNi6FYmfALjHlbP7MWR3GLf7pPm3ys-JndwQcrIqf4Y-7dxqbfkFrU0HfaVtx7yTg1cxr-oVmCMQCdQUetGcjLlXbHrlxR5JsN7RZc",
+        "e": "AQAB",
+    }
+
+
+@pytest.fixture
+def good_token(jwk):
+    return jwt.encode(
+        {"aud": os.environ["RESOURCE_ID"], "roles": ["client.readerwriter"]},
+        jwk,
+        "RS256",
+    )
+
+
+@pytest.fixture
+def client():
+    from common.require_auth import require_auth
+    from main import app
+
+    def auth_override():
+        pass
+
+    with TestClient(app) as client:
+        app.dependency_overrides[require_auth] = auth_override
+        yield client

@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: fast-api-template
+spec:
+  type: ClusterIP
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
+  selector:
+    app: fast-api-template
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fast-api-template-preview
+spec:
+  type: ClusterIP
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
+  selector:
+    app: fast-api-template

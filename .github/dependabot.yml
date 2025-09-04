@@ -1,0 +1,40 @@
+version: 2
+
+registries:
+  pediatrix-acr: # Define access for a private registry
+    type: docker-registry
+    url: mednax.azurecr.io
+    username: ReadAllToken
+    password: ${{secrets.PDX_ACR_SECRET}}
+
+  pediatrix-pypi:
+    type: python-index
+    url: https://mednax.jfrog.io/artifactory/api/pypi/pediatrix-pypi/simple
+    username: artifact_reader
+    password: ${{secrets.PDX_JFROG_SECRET}}
+
+updates:
+  # Enable version updates for poetry
+  - package-ecosystem: "pip"
+    # Look for `pyproject.toml` and `poetry.lock` files in the `root` directory
+    directory: "/"
+    registries:
+      - pediatrix-pypi
+    insecure-external-code-execution: allow
+    # Check for updates daily at midnight and noon eastern
+    schedule:
+      interval: "cron"
+      cronjob: "0 8 * * *"
+      timezone: "US/Eastern"
+
+  # Enable version updates for Docker
+  - package-ecosystem: "docker"
+    # Look for a `Dockerfile` in the `root` directory
+    directory: "/"
+    registries:
+      - pediatrix-acr
+    # Check for updates daily at midnight and noon eastern
+    schedule:
+      interval: "cron"
+      cronjob: "0 8 * * *"
+      timezone: "US/Eastern"

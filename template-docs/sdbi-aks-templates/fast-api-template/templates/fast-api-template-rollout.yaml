@@ -1,0 +1,63 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: fast-api-template
+spec:
+  strategy:
+    blueGreen:
+      activeService: fast-api-template
+      previewService: fast-api-template-preview
+      autoPromotionEnabled: true
+      scaleDownDelaySeconds: 10
+      prePromotionAnalysis:
+        templates:
+        - templateName: fast-api-template-pre-smoke-test
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fast-api-template
+  template:
+    metadata:
+      labels:
+        app: fast-api-template
+    spec:
+      containers:
+      spec:
+      containers:
+        - env:
+            - name: MS_CONFIG_URL
+              value: {{ (index .Values .Values.environment).ms_config_url }}
+            - name: ROLES
+              value: client.readerwriter
+            - name: RESOURCE_ID
+              value: {{ (index .Values .Values.environment).resource_id }}
+          image: {{ .Values.image }}:{{ .Values.version }}
+          name: fast-api-template
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: 80
+              scheme: HTTP
+            periodSeconds: 60
+            timeoutSeconds: 30
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: 80
+              scheme: HTTP
+            periodSeconds: 60
+            timeoutSeconds: 30
+          startupProbe:
+            failureThreshold: 5
+            httpGet:
+              path: /health
+              port: 80
+              scheme: HTTP
+            periodSeconds: 10
+            timeoutSeconds: 30
+          imagePullPolicy: Always
+          ports:
+          - containerPort: 80
+  revisionHistoryLimit: 1

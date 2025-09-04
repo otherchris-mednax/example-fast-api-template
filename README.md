@@ -1,0 +1,153 @@
+# fast-api-template
+
+{Insert project description and project specific steps or setup here}
+
+[CircleCI](https://app.circleci.com/pipelines/github/mednax-it/fast-api-template)
+
+### Swagger pages
+
+* [Dev](https://fast-api-template.mdnxdev.com/docs)
+* [Stage](https://fast-api-template.mdnxstage.com/docs)
+* [Prod](https://fast-api-template.mdnxclinical.com/docs)
+
+The project includes:
+
+- Static analysis using [ruff](https://docs.astral.sh/ruff/) running on all python code
+- Security scanning using [bandit](https://github.com/PyCQA/bandit) on production code
+- Import ordering using [iSort](https://pycqa.github.io/isort/)
+- Code formatting using [black](https://github.com/psf/black) on all python code
+- Unit tests using [pytest](https://docs.pytest.org/en/latest/)
+- [Docker](https://www.docker.com/) container composition
+- Execution of acceptance tests against the docker container using [Behave](https://behave.readthedocs.io/)
+- [Pediatrix CircleCI Orb](https://github.com/mednax-it/pediatrix-orb) for building, running tests and deploying within CircleCI
+
+## Getting Started
+
+### Prerequisites
+
+#### Production requirements
+
+All environments have the same requirements:
+
+-   Linux based Kubernetes Cluster
+
+#### Local development and CI requirements
+
+Requires:
+
+-   POSIX-compliant shell, e.g., `bash` or `zsh`
+-   The following environment variables must be set, typically in your shell configuration file, e.g., `~/.bashrc` or `~/.zshrc` (they are not included in the scripts). These variables allow for authentication to the [Mednax JFrog artifactory](https://mednax.jfrog.io/):
+
+```
+export JFROG_USER=<your_name_here@pediatrix.com>
+export ARTIFACT_ACCESS_TOKEN=<your_artifactory_api_key>
+export POETRY_HTTP_BASIC_PEDIATRIX_USERNAME="$JFROG_USER"
+export POETRY_HTTP_BASIC_PEDIATRIX_PASSWORD="$ARTIFACT_ACCESS_TOKEN"
+```
+
+Windows users (even on WSL): You'll need to do a little extra setup:
+
+1. Install [Docker Desktop](https://docs.docker.com/desktop/windows/install/)
+1. When installing, make sure WSL 2 is selected as the backend
+1. After installing, enable [WSL integration](https://docs.docker.com/desktop/windows/wsl/#enabling-docker-support-in-wsl-2-distros)
+
+### Initial Setup
+
+1. Run `make bootstrap` to install dependencies and setup the project.
+1. What did you expect, more steps?
+
+For Ubuntu/WSL users, you may want to run the following command so that you're not continually being prompted for a password:
+
+```
+echo "$USER ALL=(ALL:ALL) NOPASSWD: ALL" | sudo tee /etc/sudoers.d/$USE
+```
+
+### Links
+
+-   This project is built off the [python-base-sql-image in nimbus-base-docker-images](https://github.com/mednax-it/nimbus-base-docker-images/tree/main/python-base-sql-image).
+-   This project uses the shared [Pediatrix CircleCI Orb](https://github.com/mednax-it/pediatrix-orb) for building, running tests and deploying within CircleCI.
+-   This project uses ArgoCD for deployment. The Kubernetes project templates are found within [sdbi-aks-apps](https://github.com/mednax-it/sdbi-aks-apps) repo.
+
+### Makefile Targets & Scripts
+
+| Command                 | CI? | Description                                                                                                                                                                                                              |
+| ----------------------- | --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `make acceptance_tests` | ✅  | Run any and all acceptance/integration/end-to-end tests, particularly those that may require more setup/time to run.                                                                                                     |
+| `make analyze_image`    | ✅  | Run post-build analysis on the project.                                                                                                                                                                                  |
+| `make bootstrap`        |     | Resolve all dependencies that the project requires to run. (See [Local Development Pitfalls & Fixes](https://mednax1500.atlassian.net/wiki/spaces/SDBI/pages/2188804105/Local+Development+Pitfalls+Fixes) if this fails) |
+| `make build`            | ✅  | Build the project into a distributable form, including both any compiling and/or packaging, e.g., Docker images.                                                                                                         |
+| `make analyze_code`     | ✅  | Run linting and code formatting on the project.                                                                                                                                                                          |
+| `make clean`            |     | Clean up the project, including any temporary files.                                                                                                                                                                     |
+| `make format`           |     | Format all python code in the project                                                                                                                                                                                    |
+| `make start`            |     | Launch the project and any extra required processes locally.                                                                                                                                                             |
+| `make test`             |     | Runs both unit and acceptance tests.                                                                                                                                                                                     |
+| `make unit_tests`       | ✅  | Run all unit tests.                                                                                                                                                                                                      |
+| `make verify`           |     | Clean the solution, run static analysis, then runs both unit and acceptance tests.                                                                                                                                       |
+
+Note that CI also requires the `bin/build_variables.sh` script.
+
+Within the `bin` directory there is a script called `local_test_endpoint.sh` that can be used to test different environments locally.
+
+-   This script requires [jq](https://stedolan.github.io/jq/download/)
+
+#### How to use the `local_test_endpoint` script
+
+1. First, you will need to first have a `.env` file within `bin` directory with `CLIENT_ID` and `CLIENT_SECRET` set.
+
+Should look like this:
+
+```sh
+CLIENT_ID=''
+CLIENT_SECRET=''
+```
+
+2. Run the `local_test_endpoint.sh` script with the lowercase environment you want to test.
+
+Dev:
+
+```sh
+./bin/local_test_endpoint.sh dev
+```
+
+Test:
+
+```sh
+./bin/local_test_endpoint.sh test
+```
+
+Stage:
+
+```sh
+./bin/local_test_endpoint.sh stage
+```
+
+3. You should have the following response:
+
+```sh
+Testing dev environment...
+Getting token...
+Posting test request...
+[Your response body here]
+```
+
+### Testing in a local Kubernetes cluster
+
+You can test the deployment of this consumer to a local Kubernetes cluster using Minikube and Skaffold. The template for this service is found within the [sdbi-aks-apps](https://github.com/mednax-it/sdbi-aks-apps) repo.
+
+**Setup**
+
+1. Install [minikube](https://minikube.sigs.k8s.io/docs/start/) ([Docs](https://github.com/kubernetes/minikube))
+1. Make sure [argo rollouts](https://argoproj.github.io/argo-rollouts/installation/) is installed to the minikube instance
+1. Install [skaffold](https://skaffold.dev/docs/install/) ([Docs](https://skaffold.dev/docs/))
+1. You must have a `.env` created in the `/skaffold` directory that defines the following environment variables:
+    - `CLIENT_SECRET` - this is the client secret for the fast-api-template service.
+1. Run `bin/create_skaffold_secret.sh` to generate the secret.yaml file needed for Skaffold.
+1. Copy all service template files found within [sdbi-aks-apps](https://github.com/mednax-it/sdbi-aks-apps) repo to `/skaffold` directory.
+
+**Running with Skaffold**
+
+-   Make sure minikube is running with the same version of k8s as the local client:
+    -   Run `kubectl version`
+    -   If the "Client Version" and "Server Version" are the same you can just run `minikube start`
+    -   If the "Client Version" and "Server Version" are different you must start with the version specified for the client. For example if the client version is v1.21.5 run the command `minikube start --kubernetes-version v1.21.5`
+-   In a terminal navigate to the root of the project. Run `skaffold dev`, this should start up the consumer locally and show the `stdout` in your terminal.

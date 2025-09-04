@@ -1,0 +1,14 @@
+import os
+
+PROJECT_NAME = os.environ["PROJECT_NAME"]
+VERSION_NUMBER = os.environ["VERSION_NUMBER"]
+RESOURCE_ID = os.environ["RESOURCE_ID"]
+LOGGING_CATEGORY = "fast-api-template"
+
+
+# Auth
+JWKS_URL = os.environ["JWKS_URL"]
+
+# Only set this in acceptance tests, and only til we figure out
+# how to get mock_oauth2 to give us roles
+NO_ROLES = os.environ.get("NO_ROLES") == "true"

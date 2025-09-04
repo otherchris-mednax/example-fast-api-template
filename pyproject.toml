@@ -1,0 +1,71 @@
+[project]
+authors = [{ name = "Microservices" }]
+description = "This project is a Dockerized Fast API service."
+dynamic = [ "dependencies" ]
+name = "fast-api-template"
+readme = "README.md"
+requires-python = ">=3.10,<3.11"
+version = "0.0.1"
+
+[project.urls]
+repository = "https://github.com/mednax-it/nimbus-build-template.git"
+
+[tool.poetry]
+packages = [{ include = "fast_api_template", from = "src" }]
+
+[[tool.poetry.source]]
+name = "pediatrix"
+url = "https://mednax.jfrog.io/artifactory/api/pypi/pediatrix-pypi/simple"
+priority = "primary"
+
+[[tool.poetry.source]]
+name = "pypi-public"
+url = "https://pypi.org/simple/"
+priority = "supplemental"
+
+[tool.poetry.dependencies]
+python = "~3.10"
+pediatrix-logging = "^2.11.1"
+pediatrix-oauth2 = "^1.3.1"
+pediatrix-schemas = "^1.2.1"
+uvicorn = {extras = ["standard"], version = "^0.34.3"}
+fastapi = "^0.115"
+httpx = "^0.28.1"
+python-jose = {extras = ["cryptography"], version = "^3.3.0"}
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.4.0"
+pytest-mock = "^3.7.0"
+pytest-cov = "^6.1.1"
+behave = "^1.2.6"
+ruff = "^0.11.12"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.ruff.lint]
+# https://beta.ruff.rs/docs/rules/
+select = ["E", "W", "F", "PL", "I"]
+ignore = ["E501"]
+
+[tool.ruff.lint.per-file-ignores]
+"{tests}/**/*" = ["S"] # ignore flake8-bandit in non-prod code
+
+[tool.coverage.run]
+omit = [
+  "./src/fast_api_template/main.py",
+  "./src/fast_api_template/common/globals.py",
+  "./src/fast_api_template/healthcheck.py",
+]
+
+[tool.coverage.report]
+show_missing = true
+
+[tool.pytest.ini_options]
+markers = [
+  "freeze_time",
+  "only",
+]
+minversion = 7.0
+testpaths = "tests"

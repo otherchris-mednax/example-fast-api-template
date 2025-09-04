@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+
+# bin/unit_tests.sh: Run test suite for project. Optionally pass in a path to
+#                    an individual test file to run a single test.
+
+set -e
+
+# Set the working directory to be the project's base directory; all
+# subsequent paths are relative to that base directory.
+cd "$(dirname "$0")/.."
+
+source bin/build_variables.sh
+
+APPLICATION_DIR="./src/fast_api_template"
+MIN_COVERAGE_PERCENTAGE=90
+export PYTHONPATH="$APPLICATION_DIR"
+
+echo "🤖 ⟶  Running pytest…"
+if [ -n "$1" ]; then
+  # Pass arguments to test call. This is useful for calling a single test.
+  # NOTE: this only works when invoking the script directly, not via Make.
+  poetry run pytest -vv "$1"
+else
+  poetry run pytest tests/unit \
+    --cov="$APPLICATION_DIR" \
+    --cov-report=term-missing \
+    --cov-report=xml:tests/reports/coverage.xml \
+    --cov-fail-under=$MIN_COVERAGE_PERCENTAGE \
+    --junit-xml="tests/reports/xunit-result-unit.xml"
+fi

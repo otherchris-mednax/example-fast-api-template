@@ -1,0 +1,81 @@
+version: 2.1
+orbs:
+  pediatrix: mednax/pediatrix@6
+job_parameters: &job_parameters
+  project_name: fast-api-template
+build_parameters: &build_parameters
+  executor_tag: "5"
+  use_poetry: true
+  use_jfrog: true
+  use_sonarcloud: false # REMOVE THIS BEFORE DEPLOYING!!
+  context:
+    - mednax-global
+    - SonarCloud
+    - JFrog
+deploy_parameters: &deploy_parameters
+  rollout_resource_names: fast-api-template
+  use_poetry: true
+  context:
+    - mednax-global
+    - github-machine-user
+    - compliance-cluster
+    - JFrog
+job_filters: &job_filters
+  branches:
+    only: main
+
+workflows:
+  version: 2
+
+  build-deploy:
+    jobs:
+      - pediatrix/cancel-obsolete-workflows:
+          context: mednax-global
+
+      - pediatrix/change-log-check:
+          name: change-log-check
+          filters:
+            branches:
+              ignore: main
+
+      - pediatrix/python-build-test-push:
+          name: build-test-push
+          <<: *job_parameters
+          <<: *build_parameters
+      - hold-deploy-dev:
+          requires:
+            - build-test-push
+            - change-log-check
+          type: approval
+          filters:
+            branches:
+              ignore: main
+      - pediatrix/python-deploy-with-argocd:
+          name: deploy-dev
+          requires:
+            - build-test-push
+            - hold-deploy-dev
+          deploy_env: dev
+          <<: *job_parameters
+          <<: *deploy_parameters
+      - pediatrix/python-deploy-with-argocd:
+          name: deploy-stage
+          requires:
+            - deploy-dev
+          deploy_env: stage
+          <<: *job_parameters
+          <<: *deploy_parameters
+          filters: *job_filters
+      - hold-deploy-prod:
+          requires:
+            - deploy-stage
+          type: approval
+          filters: *job_filters
+      - pediatrix/python-deploy-with-argocd:
+          name: deploy-prod
+          requires:
+            - hold-deploy-prod
+          deploy_env: prod
+          <<: *job_parameters
+          <<: *deploy_parameters
+          filters: *job_filters

@@ -1,0 +1,27 @@
+services:
+  mock_oauth2_server:
+    image: "mednax.azurecr.io/mednax/mock_oauth2:1"
+    container_name: mock_oauth2_server
+    ports:
+      - "8080:8080"
+    environment:
+      HOST: mock_oauth2_server
+
+  app:
+    image: ${IMAGE_NAME}
+    container_name: app
+    ports:
+      - "80:80"
+    depends_on:
+      mock_oauth2_server:
+        condition: service_healthy
+    logging:
+      driver: json-file
+    environment:
+      PYTHONPATH: "/app/"
+      RESOURCE_ID: 50945cf2-d7dd-4d05-a9fa-47955c7fe64a
+      MS_CONFIG_URL: http://mock_oauth2_server:8080/.well-known/openid-configuration
+      JWKS_URL: http://mock_oauth2_server:8080/jwks
+      PROJECT_NAME: ${PROJECT_NAME}
+      PEDIATRIX_LOGGING_PRETTY_PRINT: "${PEDIATRIX_LOGGING_PRETTY_PRINT:-0}" # Defaults to 0 if unset
+      NO_ROLES: true

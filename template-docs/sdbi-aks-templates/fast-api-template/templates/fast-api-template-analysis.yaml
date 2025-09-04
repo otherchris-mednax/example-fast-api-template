@@ -1,0 +1,28 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AnalysisTemplate
+metadata:
+  name: fast-api-template-post-smoke-test
+spec:
+  metrics:
+    - name: health-check
+      successCondition: result == "UP"
+      count: 1
+      provider:
+        web:
+          url: "https://fast-api-template.{{ .Values.url }}/health"
+          jsonPath: "{$}"
+
+---
+apiVersion: argoproj.io/v1alpha1
+kind: AnalysisTemplate
+metadata:
+  name: fast-api-template-pre-smoke-test
+spec:
+  metrics:
+    - name: health-check
+      successCondition: result == "UP"
+      count: 1
+      provider:
+        web:
+          url: "http://fast-api-template-preview.{{ .Values.environment }}.svc.cluster.local/health"
+          jsonPath: "{$}"

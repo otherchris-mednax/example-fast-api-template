@@ -1,0 +1,16 @@
+# Note this is an incomplete docker-compose file; the rest of the services are
+# defined in the project root's docker-compose.yml. To start up both, use `make
+# acceptance_tests` or `docker-compose -f docker-compose.yml -f
+# ./docker-compose.acceptance-tests.yml up`.
+services:
+  test:
+    image: mednax.azurecr.io/mednax/python-base-test-image:latest
+    container_name: test
+    working_dir: /app
+    environment:
+      PROJECT_NAME: ${PROJECT_NAME}
+      NON_PROD_RESOURCE_ID: 50945cf2-d7dd-4d05-a9fa-47955c7fe64a
+    command: tail -F /dev/stdout
+    depends_on:
+      app:
+        condition: service_healthy
