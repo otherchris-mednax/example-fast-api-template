@@ -11,7 +11,7 @@ cd "$(dirname "$0")/.."
 
 source bin/build_variables.sh
 
-APPLICATION_DIR="./src/fast_api_template"
+APPLICATION_DIR="./src/{{project_name_underscores}}"
 MIN_COVERAGE_PERCENTAGE=90
 export PYTHONPATH="$APPLICATION_DIR"
 

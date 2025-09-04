@@ -7,7 +7,7 @@ from jose import jwt
 
 def pytest_configure():
     os.environ["VERSION_NUMBER"] = "1.1.1"
-    os.environ["PROJECT_NAME"] = "fast-api-template"
+    os.environ["PROJECT_NAME"] = "{{project_name_hyphens}}"
     os.environ["RESOURCE_ID"] = "this_apps_client_id"
     os.environ["MS_CONFIG_URL"] = "http://login.fake.com/openid-configuration"
     os.environ["ISSUER"] = (

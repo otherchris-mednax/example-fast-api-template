@@ -1,6 +1,0 @@
-apiVersion: v2
-name: fast-api-template
-description: Helm chart for fast-api-template
-type: application
-version: 0.1.0
-appVersion: 0.1.0

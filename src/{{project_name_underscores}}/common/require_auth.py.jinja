@@ -5,7 +5,7 @@ from httpx import get
 from jose import jwt
 from jose.exceptions import JWTClaimsError, JWTError
 
-from fast_api_template.common.globals import JWKS_URL, NO_ROLES, RESOURCE_ID
+from {{project_name_underscores}}.common.globals import JWKS_URL, NO_ROLES, RESOURCE_ID
 
 
 def _get_token(header_value: str) -> str:

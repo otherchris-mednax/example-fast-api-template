@@ -1,23 +1,23 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: fast-api-template-ingress
+  name: {{project_name_hyphens}}-ingress
   annotations:
     kubernetes.io/ingress.class: azure/application-gateway
     cert-manager.io/cluster-issuer: letsencrypt-prod
 spec:
   rules:
-    - host: fast-api-template.{{ .Values.url }}
+    - host: {{project_name_hyphens}}.{{'{{ .Values.url }}'}}
       http:
         paths:
           - backend:
               service:
-                name: fast-api-template
+                name: {{project_name_hyphens}}
                 port:
                   number: 80
             path: /*
             pathType: Prefix
   tls:
     - hosts:
-        - fast-api-template.{{ .Values.url }}
-      secretName: fast-api-template-secret
+        - {{project_name_hyphens}}.{{'{{ .Values.url }}'}}
+      secretName: {{project_name_hyphens}}-secret

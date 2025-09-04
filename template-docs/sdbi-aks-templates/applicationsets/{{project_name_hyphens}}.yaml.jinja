@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: fast-api-template
+  name: {{project_name_hyphens}}
 spec:
   generators:
     - list:
@@ -12,12 +12,12 @@ spec:
             server: preprod
   template:
     metadata:
-      name: 'fast-api-template-{{env}}'
+      name: '{{project_name_hyphens}}-{{env}}'
     spec:
       source:
         repoURL: git@github.com:mednax-it/sdbi-aks-apps.git
         targetRevision: HEAD
-        path: fast-api-template
+        path: {{project_name_hyphens}}
         helm:
           values: |
             version: '{{version}}'

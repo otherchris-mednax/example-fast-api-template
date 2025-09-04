@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: AnalysisTemplate
 metadata:
-  name: fast-api-template-post-smoke-test
+  name: {{project_name_hyphens}}-post-smoke-test
 spec:
   metrics:
     - name: health-check
@@ -9,14 +9,14 @@ spec:
       count: 1
       provider:
         web:
-          url: "https://fast-api-template.{{ .Values.url }}/health"
+          url: "https://{{project_name_hyphens}}.{{'{{ .Values.url }}'}}/health"
           jsonPath: "{$}"
 
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: AnalysisTemplate
 metadata:
-  name: fast-api-template-pre-smoke-test
+  name: {{project_name_hyphens}}-pre-smoke-test
 spec:
   metrics:
     - name: health-check
@@ -24,5 +24,5 @@ spec:
       count: 1
       provider:
         web:
-          url: "http://fast-api-template-preview.{{ .Values.environment }}.svc.cluster.local/health"
+          url: "http://{{project_name_hyphens}}-preview.{{'{{ .Values.environment }}'}}.svc.cluster.local/health"
           jsonPath: "{$}"

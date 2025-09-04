@@ -2,7 +2,7 @@
 authors = [{ name = "Microservices" }]
 description = "This project is a Dockerized Fast API service."
 dynamic = [ "dependencies" ]
-name = "fast-api-template"
+name = "{{project_name_hyphens}}"
 readme = "README.md"
 requires-python = ">=3.10,<3.11"
 version = "0.0.1"
@@ -11,7 +11,7 @@ version = "0.0.1"
 repository = "https://github.com/mednax-it/nimbus-build-template.git"
 
 [tool.poetry]
-packages = [{ include = "fast_api_template", from = "src" }]
+packages = [{ include = "{{project_name_underscores}}", from = "src" }]
 
 [[tool.poetry.source]]
 name = "pediatrix"
@@ -54,9 +54,9 @@ ignore = ["E501"]
 
 [tool.coverage.run]
 omit = [
-  "./src/fast_api_template/main.py",
-  "./src/fast_api_template/common/globals.py",
-  "./src/fast_api_template/healthcheck.py",
+  "./src/{{project_name_underscores}}/main.py",
+  "./src/{{project_name_underscores}}/common/globals.py",
+  "./src/{{project_name_underscores}}/healthcheck.py",
 ]
 
 [tool.coverage.report]

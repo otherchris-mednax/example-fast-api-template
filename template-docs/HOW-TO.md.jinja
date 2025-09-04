@@ -1,11 +1,11 @@
-# How to Use the fast-api-template
+# How to Use the {{project_name_hyphens}}
 
 > **IMPORTANT:** Please make sure to follow initial project steps found within the [main branch's README](https://github.com/mednax-it/nimbus-build-template/blob/main/README.md).
 
 1. Cut a feature branch from the main branch for your Jira story and make the following changes:
-    * Replace all instances of `fast-api-template` with your new project name.
-    * Rename the `src/fast_api_template` folder at the root of the project
-        * Replace all instances of `fast_api_template` with your new folder name
+    * Replace all instances of `{{project_name_hyphens}}` with your new project name.
+    * Rename the `src/{{project_name_underscores}}` folder at the root of the project
+        * Replace all instances of `{{project_name_underscores}}` with your new folder name
     * Add a new SonarCloud project for the repo.
     * Add project description to your README file.
     * Update CircleCI config (`.circleci/config.yml`):
@@ -29,28 +29,28 @@ In order to deploy with Argo CD, updates must be made to the [sdbi-aks-apps](htt
 **For convenience only**, the following files are provided to update and move to the [sdbi-aks-apps](https://github.com/mednax-it/sdbi-aks-apps) repo, and **should be deleted** once your project is set up:
 - sdbi-aks-templates
     - applicationsets
-        - fast-api-template.yaml -> rename to [project name].yaml
-    - fast-api-template -> rename to [project name]
+        - {{project_name_hyphens}}.yaml -> rename to [project name].yaml
+    - {{project_name_hyphens}} -> rename to [project name]
         - templates
-            - fast-api-template-analysis.yaml -> rename to [project name]-analysis.yaml
-            - fast-api-template-rollout.yaml -> rename to [project name]-rollout.yaml
-            - fast-api-template-ingress.yaml -> rename to [project name]-ingress.yaml
-            - fast-api-template-service.yaml -> rename to [project name]-service.yaml
+            - {{project_name_hyphens}}-analysis.yaml -> rename to [project name]-analysis.yaml
+            - {{project_name_hyphens}}-rollout.yaml -> rename to [project name]-rollout.yaml
+            - {{project_name_hyphens}}-ingress.yaml -> rename to [project name]-ingress.yaml
+            - {{project_name_hyphens}}-service.yaml -> rename to [project name]-service.yaml
         - Chart.yaml
         - values.yaml
 
 1. Rename template files to match project name.
-    * `applicationsets/fast-api-template.yaml` -> rename to `applicationsets/[project name].yaml`
-    * `fast-api-template` folder -> rename to `[project name]`
-    * `[project name]/templates/fast-api-template-analysis.yaml` -> rename to `[project name]/templates/[project name]-analysis.yaml`
-    * `[project name]/templates/fast-api-template-rollout.yaml` -> rename to `[project name]/templates/[project name]-rollout.yaml`
-    * `[project name]/templates/fast-api-template-ingress.yaml` -> rename to `[project name]/templates/[project name]-ingress.yaml`
-    * `[project name]/templates/fast-api-template-service.yaml` -> rename to `[project name]/templates/[project name]-service.yaml`
-    * **NOTE** Step 3-1 of [How to Use the fast-api-template](#how-to-use-the-fast-api-template) would have updated `fast-api-template` to your new project name in all of these files.
+    * `applicationsets/{{project_name_hyphens}}.yaml` -> rename to `applicationsets/[project name].yaml`
+    * `{{project_name_hyphens}}` folder -> rename to `[project name]`
+    * `[project name]/templates/{{project_name_hyphens}}-analysis.yaml` -> rename to `[project name]/templates/[project name]-analysis.yaml`
+    * `[project name]/templates/{{project_name_hyphens}}-rollout.yaml` -> rename to `[project name]/templates/[project name]-rollout.yaml`
+    * `[project name]/templates/{{project_name_hyphens}}-ingress.yaml` -> rename to `[project name]/templates/[project name]-ingress.yaml`
+    * `[project name]/templates/{{project_name_hyphens}}-service.yaml` -> rename to `[project name]/templates/[project name]-service.yaml`
+    * **NOTE** Step 3-1 of [How to Use the {{project_name_hyphens}}](#how-to-use-the-{{project_name_hyphens}}) would have updated `{{project_name_hyphens}}` to your new project name in all of these files.
 1. Add non secret environment variables to the `[project name]/values.yaml` and `[project name]/templates/[project name]-rollout.yaml` as required.
 1. Copy `applicationsets/[project name].yaml` file to the `applicationsets` folder in the [sdbi-aks-apps](https://github.com/mednax-it/sdbi-aks-apps) repo.
 1. Copy the `[project name]` folder to a new folder in the [sdbi-aks-apps](https://github.com/mednax-it/sdbi-aks-apps) repo.
-1. Rename `skaffold/fast-api-template.yaml` to `skaffold/[project name].yaml`
+1. Rename `skaffold/{{project_name_hyphens}}.yaml` to `skaffold/[project name].yaml`
 1. Update `skaffold` templates to match templates found in `[project name]/templates` folder.
     * Refer to README on how to generate the secret values for Skaffold.
 1. Delete the `sdbi-aks-templates` folder and all its contents from this repo.

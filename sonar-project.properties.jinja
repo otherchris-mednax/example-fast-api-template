@@ -1,16 +1,16 @@
-sonar.projectKey=mednax-it_fast-api-template
+sonar.projectKey=mednax-it_{{project_name_hyphens}}
 sonar.organization=mednax-it
 
 # This is the name and version displayed in the SonarCloud UI.
-sonar.projectName=fast-api-template
+sonar.projectName={{project_name_hyphens}}
 sonar.projectVersion=1.0
 
 # Path is relative to the sonar-project.properties file. Replace "\" by "/" on Windows.
 #sonar.sources=acceptance-tests/reports
-sonar.sources=src/fast_api_template
+sonar.sources=src/{{project_name_underscores}}
 
 # Excluding configuration and main files
-sonar.coverage.exclusions=src/fast_api_template/common/globals.py,src/fast_api_template/main.py
+sonar.coverage.exclusions=src/{{project_name_underscores}}/common/globals.py,src/{{project_name_underscores}}/main.py
 
 sonar.python.coverage.reportPaths=tests/reports/*coverage*.xml
 sonar.python.xunit.reportPath=tests/reports/xunit-result-*.xml

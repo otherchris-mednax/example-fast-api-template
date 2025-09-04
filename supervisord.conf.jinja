@@ -2,7 +2,7 @@
 nodaemon=true
 
 [program:uvicorn]
-command=%(ENV_VIRTUAL_ENV)s/bin/uvicorn fast_api_template.main:app --host 0.0.0.0 --port 80 --proxy-headers --forwarded-allow-ips="*"
+command=%(ENV_VIRTUAL_ENV)s/bin/uvicorn {{project_name_underscores}}.main:app --host 0.0.0.0 --port 80 --proxy-headers --forwarded-allow-ips="*"
 stdout_logfile=/dev/stdout
 stdout_logfile_maxbytes=0
 stderr_logfile=/dev/stderr

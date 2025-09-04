@@ -22,4 +22,4 @@ COPY ./src /app
 
 WORKDIR /
 HEALTHCHECK --interval=1s --timeout=1s --start-period=2s --retries=3 \
-  CMD ["/bin/sh", "-c", "./app/fast_api_template/healthcheck.py"]
+  CMD ["/bin/sh", "-c", "./app/{{project_name_underscores}}/healthcheck.py"]

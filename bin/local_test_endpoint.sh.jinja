@@ -13,11 +13,11 @@ PROJECT_DIR="$(dirname "$BUILD_SCRIPTS_DIR")"
 ENV=$1
 
 if [[ $ENV == "dev" ]]; then
-  BASE_URL="https://fast-api-template.mdnxdev.com"
+  BASE_URL="https://{{project_name_hyphens}}.mdnxdev.com"
 elif [[ $ENV == "test" ]]; then
-  BASE_URL="https://fast-api-template.mdnxtest.com"
+  BASE_URL="https://{{project_name_hyphens}}.mdnxtest.com"
 elif [[ $ENV == "stage" ]]; then
-  BASE_URL="https://fast-api-template.mdnxstage.com"
+  BASE_URL="https://{{project_name_hyphens}}.mdnxstage.com"
 fi
 
 HEALTH_URL_PATH="${BASE_URL}/health"
