@@ -60,7 +60,7 @@ def _step_impl(context, path):
     context.response = _send_get_request(context, path)
 
 
-@when('a user makes a POST request to "{path}" with "{kind}" payload')
+@when('a user makes a POST request to "{path}" with a "{kind}" payload')
 def _step_impl(context, path, kind):
     context.response = _send_post_request(context, path, kind)
 
