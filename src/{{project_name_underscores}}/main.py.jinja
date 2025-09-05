@@ -1,6 +1,7 @@
 from fastapi import Depends, FastAPI
 from fastapi.responses import PlainTextResponse
 from pediatrix_logging import activate_fastapi_logging_integration
+from pydantic import BaseModel
 
 from {{project_name_underscores}}.common.globals import PROJECT_NAME, VERSION_NUMBER
 from {{project_name_underscores}}.common.require_auth import require_auth
@@ -17,13 +18,16 @@ activate_fastapi_logging_integration(app, "{{project_name_hyphens}}")
 async def healthcheck():
     return "UP"
 
+class HelloPayload(BaseModel):
+    message: str
 
-@app.get(
+
+@app.post(
     "/hello",
     response_class=PlainTextResponse,
     dependencies=[
         Depends(require_auth),
     ],
 )
-async def hello():
+async def hello(payload: HelloPayload):
     return "ello world"

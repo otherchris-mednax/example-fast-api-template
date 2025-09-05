@@ -29,9 +29,13 @@ def _send_get_request(context, uri):
     return response
 
 
-def _send_post_request(context, uri):
+def _send_post_request(context, uri, kind):
     if not hasattr(context, "payload"):
         context.payload = {}
+    if kind == "good":
+        context.payload = {"message": "hello"}
+    else:
+        context.payload = {"not_message": "bad"}
     response = post(
         f"{BASE_APP_URL}{uri}",
         json=context.payload,
@@ -56,9 +60,9 @@ def _step_impl(context, path):
     context.response = _send_get_request(context, path)
 
 
-@when('a user makes a POST request to "{path}"')
-def _step_impl(context, path):
-    context.response = _send_post_request(context, path)
+@when('a user makes a POST request to "{path}" with "{kind}" payload')
+def _step_impl(context, path, kind):
+    context.response = _send_post_request(context, path, kind)
 
 
 @then('the http response should have a status code of "{status_code}"')
